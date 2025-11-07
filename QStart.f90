@@ -13,7 +13,7 @@
 !     complex :: frequency ! exemplo dado no fortran guide
     
 !     ! "character" serve para letras/palavras, coloque um * (vezes) e o número de letras da palavra
-!     character *6:: estrela
+!     character *6:: estrela !6 é o tamanho maximo do "nome"
 
 !     ! "logical" serve para boleanos
 !     logical :: funcionou
@@ -25,13 +25,13 @@
 !     funcionou = .true. !entre pontos, as condiçoes são true(verdadeiro) e false(falso)
 ! end program Variables
 
-program read_values
+program Cone
+    use, intrinsic :: iso_fortran_env, only: sp=>real32, dp=>real64
     implicit none !é tipo um cabeçalho, quase sempre tem
-    real :: x,y,soma,multiplicacao
-
-    print *, "digite dois numeros"
-    read (*,*) x,y
-    soma = x+y
-    multiplicacao= x*y
-    print *, "a soma e: ", soma, " e a multiplicacao: ", multiplicacao
-end program read_values
+    real(sp) :: R, H, G !R->raio H->altura G-> geratriz
+    real(sp) :: pi = 3.1415926
+    G = (R**2 +H**2)**(0.5)
+    print *, "coloque o raio e a altura do cone"
+    read *, R, H
+    print *,"o volume e:", R*R*H*3.1415926/3, "a area e:", pi*R*(G+R)
+end program Cone
