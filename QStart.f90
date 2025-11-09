@@ -1,6 +1,6 @@
 ! program Variables
 !     implicit none !faz com que as variaveis tenham que ser declaradas e não definidas pela sua letra de início
-
+!     use, intrinsic :: iso_fortran_env, only: sp=>real32, dp=>real64 !defino os "bytes"
 !     ! variaveis devem ser declaradas antes de seus valores serem deficidos
 
 !     ! "integer" serve para qualquer tipo de número inteiro, se for uma constante pode ser declarada junto
@@ -25,13 +25,34 @@
 !     funcionou = .true. !entre pontos, as condiçoes são true(verdadeiro) e false(falso)
 ! end program Variables
 
-program Cone
-    use, intrinsic :: iso_fortran_env, only: sp=>real32, dp=>real64
+program Euler1 !multiplos de 3 ou 5 até 1000
     implicit none !é tipo um cabeçalho, quase sempre tem
-    real(sp) :: R, H, G !R->raio H->altura G-> geratriz
-    real(sp) :: pi = 3.1415926
-    G = (R**2 +H**2)**(0.5)
-    print *, "coloque o raio e a altura do cone"
-    read *, R, H
-    print *,"o volume e:", R*R*H*3.1415926/3, "a area e:", pi*R*(G+R)
-end program Cone
+    integer :: i, k
+    integer, allocatable  :: N(:)
+    integer, allocatable :: M3(:), M5(:), M15(:)
+    integer :: sum
+    print *, "you gonna find the sum of numbers bellow?"
+    read *, k
+    allocate(N(K))
+    N = [(i, i = 1, k)]
+    M3 = (N(3:k-1:3))
+    M5 = (N(5:k-1:5))
+    M15 = (N(15:k-1:15))
+    sum=0
+    do i = 1, size(M3)
+        sum = sum + M3(i)
+    end do
+    do i = 1, size(M5)
+        sum = sum + M5(i)
+    end do
+    do i = 1, size(M15)
+        sum = sum - M15(i)
+    end do
+    print *,"multiples of three below", K ,": "
+    print *,M3
+    print *,"multiples of five below", K ,": "
+    print *,M5
+    print *,"multiples of three and five below", K ,": "
+    print *,M15
+    print *, "sum of multiples of three or five below ", K ,":", sum
+end program Euler1
