@@ -25,34 +25,59 @@
 !     funcionou = .true. !entre pontos, as condiçoes são true(verdadeiro) e false(falso)
 ! end program Variables
 
-program Euler1 !multiplos de 3 ou 5 até 1000
+function fibonnaciSequence(k) result(fibonnaci)
+    implicit none
+    integer, intent(in) :: k
+    integer :: last, sLast, current, i
+    integer, dimension(int(((k)**0.25))+11) :: fibonnaci
+    i=1
+    current = 1
+    last = 1
+    sLast = 0
+    fibonnaci(:) = 0
+    fibonnaciConstructor: do
+        if(current > k) then
+            exit fibonnaciConstructor
+        end if
+        fibonnaci(i) = current
+        current = sLast + last
+        sLast = last
+        last = current
+        i = i+1
+    end do fibonnaciConstructor
+end function fibonnaciSequence
+
+program Euler2 !soma dos números pares da sequencia de fibonnaci até 4*(10**6) (4.000.000)
     implicit none !é tipo um cabeçalho, quase sempre tem
-    integer :: i, k
-    integer, allocatable  :: N(:)
-    integer, allocatable :: M3(:), M5(:), M15(:)
-    integer :: sum
-    print *, "you gonna find the sum of numbers bellow?"
+    integer, allocatable :: fibonnaciEven(:)
+    integer, allocatable :: fibonnaci(:)
+    integer :: i, sum, k
+    
+    interface
+        function fibonnaciSequence(k) result(fibonnaci)
+            integer, intent(in) :: k
+            integer :: Last, current, i
+            integer, dimension(int(((k)**0.25))+11) :: fibonnaci
+        end function
+    end interface
+    sum = 0
+    print *, "how many even fibonnaci nunbers you want to sum?"
     read *, k
-    allocate(N(K))
-    N = [(i, i = 1, k)]
-    M3 = (N(3:k-1:3))
-    M5 = (N(5:k-1:5))
-    M15 = (N(15:k-1:15))
-    sum=0
-    do i = 1, size(M3)
-        sum = sum + M3(i)
+
+    fibonnaci = fibonnaciSequence(k)
+    fibonnaciEven = fibonnaci
+    fibonnaciEven(:) = 0 !muito mal otimizado, mas foi o que consegui pensar
+    !print *, fibonnaci
+
+    do i=1, size(fibonnaci)
+        if(mod(fibonnaci(i), 2) == 0 .and. fibonnaci(i) /= 0)then
+            !print *, fibonnaci(i)
+            fibonnaciEven(i) = fibonnaci(i)
+        end if
     end do
-    do i = 1, size(M5)
-        sum = sum + M5(i)
+
+    do i=1, size(fibonnaciEven)
+        sum = sum + fibonnaciEven(i)
     end do
-    do i = 1, size(M15)
-        sum = sum - M15(i)
-    end do
-    print *,"multiples of three below", K ,": "
-    print *,M3
-    print *,"multiples of five below", K ,": "
-    print *,M5
-    print *,"multiples of three and five below", K ,": "
-    print *,M15
-    print *, "sum of multiples of three or five below ", K ,":", sum
-end program Euler1
+    print *,sum
+end program Euler2
