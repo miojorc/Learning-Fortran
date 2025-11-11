@@ -25,59 +25,50 @@
 !     funcionou = .true. !entre pontos, as condiçoes são true(verdadeiro) e false(falso)
 ! end program Variables
 
-function fibonnaciSequence(k) result(fibonnaci)
+function primeNumbers(k) result(PN)
     implicit none
     integer, intent(in) :: k
-    integer :: last, sLast, current, i
-    integer, dimension(int(((k)**0.25))+11) :: fibonnaci
-    i=1
-    current = 1
-    last = 1
-    sLast = 0
-    fibonnaci(:) = 0
-    fibonnaciConstructor: do
-        if(current > k) then
-            exit fibonnaciConstructor
-        end if
-        fibonnaci(i) = current
-        current = sLast + last
-        sLast = last
-        last = current
-        i = i+1
-    end do fibonnaciConstructor
-end function fibonnaciSequence
+    integer, allocatable :: PN(:)
+    integer, allocatable :: PNM(:)
+    integer :: i, ii, j
 
-program Euler2 !soma dos números pares da sequencia de fibonnaci até 4*(10**6) (4.000.000)
-    implicit none !é tipo um cabeçalho, quase sempre tem
-    integer, allocatable :: fibonnaciEven(:)
-    integer, allocatable :: fibonnaci(:)
-    integer :: i, sum, k
-    
+    allocate(PNM(k))!F processamento
+    j=2
+    PNM(1) = 1
+    PNM(2) = 2
+
+    primeConstructor: do i = 1, k, 1
+        primecomputor: do ii = j, 2, -1
+            if((mod(i, PNM(ii)) == 0 .and. i>=PNM(ii)) .or. i==1)then
+                cycle primeConstructor
+            end if 
+        end do primecomputor
+        j = j+1
+        PNM(j) = i
+    end do primeConstructor
+    print *, j
+
+    allocate(PN(j))
+    do i=1, size(PN), 1
+        PN(i) = PNM(i)
+    end do
+
+end function primeNumbers
+
+program Euler3 !maior número primo divisor de 600851475143, de 13195 é 5, 7, 13, 29
+    implicit none
+    integer :: number
+    integer, allocatable :: primes(:), primeFactors(:)
     interface
-        function fibonnaciSequence(k) result(fibonnaci)
+        function primeNumbers(k) result(PN)
             integer, intent(in) :: k
-            integer :: Last, current, i
-            integer, dimension(int(((k)**0.25))+11) :: fibonnaci
+            integer, allocatable :: PN(:)
+            integer, allocatable :: PNM(:)
+            integer :: i, ii, j
         end function
     end interface
-    sum = 0
-    print *, "how many even fibonnaci nunbers you want to sum?"
-    read *, k
 
-    fibonnaci = fibonnaciSequence(k)
-    fibonnaciEven = fibonnaci
-    fibonnaciEven(:) = 0 !muito mal otimizado, mas foi o que consegui pensar
-    !print *, fibonnaci
-
-    do i=1, size(fibonnaci)
-        if(mod(fibonnaci(i), 2) == 0 .and. fibonnaci(i) /= 0)then
-            !print *, fibonnaci(i)
-            fibonnaciEven(i) = fibonnaci(i)
-        end if
-    end do
-
-    do i=1, size(fibonnaciEven)
-        sum = sum + fibonnaciEven(i)
-    end do
-    print *,sum
-end program Euler2
+    number = 64000
+    print *, "K"
+    print *, primeNumbers(number)
+end program Euler3
