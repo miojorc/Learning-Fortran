@@ -26,17 +26,19 @@ function testPalindrome(m1,m2) result (YN)
         k = int(NT/(10**(CS-i)))
     end do
 
-    print *, NT, palindrome
+    !print *, NT, palindrome
 
     do i=1, size(palindrome), 1
         Ipalindrome(i) = palindrome(size(palindrome)-(i-1))
     end do
-    print *, Ipalindrome, "I P"
+    
+    !print *, Ipalindrome, "I P"
 
     do i=1, size(palindrome), 1
         if(palindrome(i) /= Ipalindrome(i))then
-            print *, palindrome(i)," ", Ipalindrome(i)
+            !print *, palindrome(i)," ", Ipalindrome(i)
             YN=.false.
+            exit
         end if
     end do
 end function
@@ -44,20 +46,23 @@ end function
 program Euler4
     implicit none
     integer :: m1, m2
-    integer :: i
+    integer :: i, j, palindrome
     logical testPalindrome
     m1=100
     m2=100
+    palindrome=0
 
-    if(testPalindrome(91,99) .eqv. .true.)then
-        print *, 91*99
-    end if
 
-    ! do i =1, 899, 1
-    !     if(testPalindrome(m1,m2) .eqv. .true.)then
-    !         print *, m1*m2
-    !         exit
-    !     end if
-    !     m1 = m1+1
-    ! end do
+    m1Check: do i = 1, 899, 1
+        m1 = 100+i
+        m2Check: do j = 1, 899, 1
+            m2 = 100+j
+            if(testPalindrome(m1,m2) .eqv. .true.)then
+                if(palindrome < m1*m2)then
+                    palindrome = m1*m2
+                end if
+            end if
+        end do m2Check
+    end do m1Check
+    print *, palindrome
 end program Euler4
